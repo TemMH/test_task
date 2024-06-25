@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('assessments', function (Blueprint $table) {
             $table->id();
             
-            $table->foreignId('comment_id')->nullable()->constrained('comments')->onDelete('cascade');
-            $table->foreignId('sender_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('comment_id')->constrained('comments')->onDelete('cascade');
+            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
+
+            $table->boolean('status');
 
             $table->timestamps();
         });
