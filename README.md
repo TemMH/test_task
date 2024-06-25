@@ -1,6 +1,10 @@
-docker-compose run up -d
+cd .\src\
 
-docker-compose run composer install
+composer update
+
+cd ..
+
+docker-compose up -d
 
 docker-compose run artisan migrate
 
