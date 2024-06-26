@@ -50,5 +50,13 @@ services:
       - ./src:/var/www/laravel
     entrypoint: ["php", "/var/www/laravel/artisan"]
 
+  npm:  
+    image: node:14
+    working_dir: /var/www/laravel
+    entrypoint: ["npm"]
+    volumes: 
+      - ./src:/var/www/laravel
+
+
 volumes:
   db_data:
