@@ -2,30 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\User\UserResource;
-use App\Models\Appreciation;
-use App\Models\Appreciation_type;
+use App\Models\appreciation_type;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Inertia\Inertia;
 
-class UserController extends Controller
+class AppreciationTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-
-        $users = User::all();
-
-        $users = UserResource::collection($users)->resolve();
-
-        return inertia('User/Index', compact('users'));
-        
-        // return Inertia::render('User/Index', [
-        //     'users' => User::all(),
-        //   ]);
+        //
     }
 
     /**
@@ -47,16 +34,15 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(appreciation_type $appreciation_type)
     {
-        $appreciation_types = Appreciation_type::all();
-        return inertia('User/Show', compact('user','appreciation_types'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(appreciation_type $appreciation_type)
     {
         //
     }
@@ -64,7 +50,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, appreciation_type $appreciation_type)
     {
         //
     }
@@ -72,7 +58,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(appreciation_type $appreciation_type)
     {
         //
     }

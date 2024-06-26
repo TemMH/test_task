@@ -8,6 +8,8 @@ docker-compose up -d
 
 docker-compose run artisan migrate
 
+docker-compose run artisan db:seed --class=AppreciationTypeTableSeeder
+
 docker-compose run --rm npm run build
 
 project http://localhost:8000

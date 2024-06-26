@@ -18,12 +18,22 @@ import { Head } from '@inertiajs/vue3';
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900">
 
-                            <div> {{ user.id }} {{ user.second_name }} {{ user.first_name }}  {{ user.middle_name }} </div>
+                            <div> {{ user.id }} {{ user.second_name }} {{ user.first_name }} {{ user.middle_name }}
+                            </div>
 
 
                         </div>
+                        <div v-if="appreciation_types">
+
+                            <div>Выберите благодарность для отправки</div>
+
+                            <div v-for="appreciation_type in appreciation_types">
+                                <div> {{ appreciation_type.name }} </div>
+                            </div>
+
+                        </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -37,7 +47,8 @@ export default {
     name: "Show",
 
     props: [
-        'user'
+        'user',
+        'appreciation_types'
     ],
 }
 </script>

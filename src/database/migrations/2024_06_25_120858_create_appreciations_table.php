@@ -16,12 +16,14 @@ return new class extends Migration
 
             $table->unsignedBigInteger('sender_id');
             $table->unsignedBigInteger('recipient_id');
+            $table->unsignedBigInteger('appreciation_type_id');
 
             $table->string('appreciation_text', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('appreciation_type_id')->references('id')->on('appreciation_types')->onDelete('cascade');
         });
     }
 
