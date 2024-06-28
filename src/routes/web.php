@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\AppreciationTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AppreciationController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,5 +42,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
 Route::get('/user/{user}', [UserController::class, 'show'])->name('user.show');
 
+Route::post('/appreciation', [AppreciationController::class, 'store'])->name('appreciation.store');
 
 require __DIR__.'/auth.php';

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appreciation;
+use App\Models\User;
+use App\Models\Appreciation_type;
+use App\Http\Requests\Apperciation\StoreRequest;
 use Illuminate\Http\Request;
 
 class AppreciationController extends Controller
@@ -26,9 +29,11 @@ class AppreciationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        Appreciation::create($request->validated());
+
+        return back();
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\appreciation_type;
+use App\Models\Appreciation_type;
 use Illuminate\Http\Request;
 
 class AppreciationTypeController extends Controller
@@ -34,7 +34,7 @@ class AppreciationTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(appreciation_type $appreciation_type)
+    public function show(Appreciation_type $appreciation_type)
     {
         //
     }
@@ -42,7 +42,7 @@ class AppreciationTypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(appreciation_type $appreciation_type)
+    public function edit(Appreciation_type $appreciation_type)
     {
         //
     }
@@ -50,7 +50,7 @@ class AppreciationTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, appreciation_type $appreciation_type)
+    public function update(Request $request, Appreciation_type $appreciation_type)
     {
         //
     }
@@ -58,7 +58,7 @@ class AppreciationTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(appreciation_type $appreciation_type)
+    public function destroy(Appreciation_type $appreciation_type)
     {
         //
     }
