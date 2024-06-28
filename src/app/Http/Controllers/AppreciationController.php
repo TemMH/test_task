@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Appreciation;
 use App\Models\User;
 use App\Models\Appreciation_type;
+use App\Services\AppreciationService;
 use App\Http\Requests\Apperciation\StoreRequest;
 use Illuminate\Http\Request;
 
@@ -29,24 +30,23 @@ class AppreciationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+     protected $appreciationService;
+
+     public function __construct(AppreciationService $appreciationService)
+     {
+         $this->appreciationService = $appreciationService;
+     }
+
     public function store(StoreRequest $request)
     {
+        $result = $this->appreciationService->store($request);
 
-        // Проверяем, отправлял ли пользователь благодарность раньше
-        $existingAppreciation = Appreciation::where('sender_id', $request->sender_id)
-            ->where('recipient_id', $request->recipient_id)
-            ->exists();
-
-        // Если благодарность уже была отправлена-> вернуть ошибку
-        if ($existingAppreciation) {
-
-            return back()->withErrors(['message' => 'Вы уже отправили благодарность этому пользователю.']);
+        if ($result['success']) {
+            return back()->with('success', 'Благодарность успешно отправлена.');
+        } else {
+            return back()->withErrors(['message' => $result['message']]);
         }
-
-
-        Appreciation::create($request->validated());
-
-        return back();
     }
 
     /**
