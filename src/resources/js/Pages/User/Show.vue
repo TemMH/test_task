@@ -22,7 +22,7 @@ import axios from 'axios';
                             <div>Выберите благодарность для отправки</div>
                             <div class="flex flex-wrap">
                                 <div class="flex justify-center w-1/5 p-2" v-for="appreciation_type in appreciation_types" :key="appreciation_type.id">
-                                    <button @click="submitForm(auth.user.id, user.id, appreciation_type.id)" class="bg-blue-500 rounded-full h-32 w-32">
+                                    <button @click="submitForm(auth.user.id, user.id, appreciation_type.id)" :disabled="isSubmitted || hasSentAppreciation" class="bg-blue-500 rounded-full h-32 w-32">
                                         <div style="background-color: blue; border-radius: 100%;"
                                             class="box-border h-32 w-32 p-4 border-4" :title="appreciation_type.name">
                                         </div>
@@ -43,7 +43,8 @@ export default {
     props: [
         'user',
         'appreciation_types',
-        'auth'
+        'auth',
+        'hasSentAppreciation',
     ],
     data() {
         return {
@@ -51,7 +52,8 @@ export default {
                 sender_id: '',
                 recipient_id: '',
                 appreciation_type_id: '',
-            }
+            },
+            isSubmitted: false 
         }
     },
     methods: {
@@ -63,6 +65,7 @@ export default {
             try {
                 const response = await axios.post('/appreciation', this.formData);
                 console.log(response.data);
+                this.isSubmitted = true;
             } catch (error) {
                 console.error(error);
             }

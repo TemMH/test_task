@@ -31,6 +31,19 @@ class AppreciationController extends Controller
      */
     public function store(StoreRequest $request)
     {
+
+        // Проверяем, отправлял ли пользователь благодарность раньше
+        $existingAppreciation = Appreciation::where('sender_id', $request->sender_id)
+            ->where('recipient_id', $request->recipient_id)
+            ->exists();
+
+        // Если благодарность уже была отправлена-> вернуть ошибку
+        if ($existingAppreciation) {
+
+            return back()->withErrors(['message' => 'Вы уже отправили благодарность этому пользователю.']);
+        }
+
+
         Appreciation::create($request->validated());
 
         return back();
