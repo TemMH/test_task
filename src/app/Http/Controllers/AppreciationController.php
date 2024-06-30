@@ -8,15 +8,25 @@ use App\Models\Appreciation_type;
 use App\Services\AppreciationService;
 use App\Http\Requests\Apperciation\StoreRequest;
 use Illuminate\Http\Request;
+use App\Http\Resources\Appreciation\AppreciationResource;
+use App\Http\Resources\Comment\CommentResource;
+use App\Models\Comment;
 
 class AppreciationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
+    public function indexUser(User $user)
+    {//Add count comments+likes
+        $appreciation_types = Appreciation_type::all();
+        
+        $appreciations_user = Appreciation::where('recipient_id', $user->id)->get();
+
+        $appreciations_user = AppreciationResource::collection($appreciations_user)->resolve();
+
+        
+        return inertia('Appreciation/IndexUser', compact('user','appreciations_user','appreciation_types'));
     }
 
     /**
@@ -54,8 +64,19 @@ class AppreciationController extends Controller
      */
     public function show(Appreciation $appreciation)
     {
-        //
+
+        $appreciation_comments = Comment::where('appreciation_id', $appreciation->id)->get();
+
+        $appreciation_comments = CommentResource::collection($appreciation_comments)->resolve();
+        
+        $comments = $appreciation_comments;
+
+        $appreciation = new AppreciationResource($appreciation);
+
+        return inertia('Appreciation/Show', ['appreciation' => $appreciation, 'comments' => $comments]);
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

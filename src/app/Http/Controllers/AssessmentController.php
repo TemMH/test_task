@@ -5,61 +5,43 @@ namespace App\Http\Controllers;
 use App\Models\Assessment;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\Assessment\StoreRequest;
+use App\Services\AssessmentService;
+
 class AssessmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
-     * Show the form for creating a new resource.
+     * Comment Assessment 
      */
-    public function create()
+
+     protected $assessmentService;
+
+     public function __construct(AssessmentService $assessmentService)
+     {
+         $this->assessmentService = $assessmentService;
+     }
+
+    public function commentlike(Request $request)
     {
-        //
+        $result = $this->assessmentService->commentlike($request);
+
+        if ($result['success']) {
+            return back()->with('success', 'Лайк успешно отправлен.');
+        } else {
+            return back()->withErrors(['message' => $result['message']]);
+        }
+    }
+    
+    public function commentdislike(Request $request)
+    {
+        $result = $this->assessmentService->commentdislike($request);
+
+        if ($result['success']) {
+            return back()->with('success', 'Дизлайк успешно отправлен.');
+        } else {
+            return back()->withErrors(['message' => $result['message']]);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Assessment $assessment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Assessment $assessment)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Assessment $assessment)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Assessment $assessment)
-    {
-        //
-    }
 }

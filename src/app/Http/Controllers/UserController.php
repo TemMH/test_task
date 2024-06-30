@@ -22,10 +22,6 @@ class UserController extends Controller
         $users = UserResource::collection($users)->resolve();
 
         return inertia('User/Index', compact('users'));
-        
-        // return Inertia::render('User/Index', [
-        //     'users' => User::all(),
-        //   ]);
     }
 
     /**

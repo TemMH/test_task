@@ -2,6 +2,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
+import { Link } from '@inertiajs/vue3';
+
 </script>
 
 <template>
@@ -33,6 +35,13 @@ import axios from 'axios';
                     </div>
                 </div>
             </div>
+            <div class="py-12">
+<div class="max-w-64 mx-auto bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <Link :href="route('appreciations.indexUser', user.id)">
+                Посмотреть все благодарности
+                </Link>
+            </div>
+</div>
         </div>
     </AuthenticatedLayout>
 </template>

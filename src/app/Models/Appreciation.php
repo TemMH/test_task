@@ -32,4 +32,14 @@ class Appreciation extends Model
             return $this->belongsTo(Appreciation_type::class, 'appreciation_type_id');
         }
     
+        public function comments()
+        {
+            return $this->hasMany(Comment::class, 'appreciation_id');
+        }
+
+        public function user()
+        {
+            return $this->belongsTo(User::class);
+        }
+        
 }
