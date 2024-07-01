@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Assessment\StoreRequest;
 use App\Services\AssessmentService;
+use App\Http\Resources\Comment\CommentResource;
+
 
 class AssessmentController extends Controller
 {
@@ -22,26 +24,19 @@ class AssessmentController extends Controller
          $this->assessmentService = $assessmentService;
      }
 
-    public function commentlike(Request $request)
-    {
-        $result = $this->assessmentService->commentlike($request);
-
-        if ($result['success']) {
-            return back()->with('success', 'Лайк успешно отправлен.');
-        } else {
-            return back()->withErrors(['message' => $result['message']]);
-        }
-    }
-    
-    public function commentdislike(Request $request)
-    {
-        $result = $this->assessmentService->commentdislike($request);
-
-        if ($result['success']) {
-            return back()->with('success', 'Дизлайк успешно отправлен.');
-        } else {
-            return back()->withErrors(['message' => $result['message']]);
-        }
-    }
+     public function commentAssessment(Request $request)
+     {
+         $result = $this->assessmentService->commentAssessment($request);
+ 
+         if ($result['success']) {
+             if ($result['action'] === 'removed') {
+                 return response()->json(['success' => true, 'action' => 'removed']);
+             } else {
+                 return response()->json(['success' => true, 'comment' => new CommentResource($result['assessment']->comment)]);
+             }
+         } else {
+             return response()->json(['success' => false, 'message' => 'Failed to assess comment'], 400);
+         }
+     }
 
 }

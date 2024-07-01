@@ -25,8 +25,9 @@ import { Link } from '@inertiajs/vue3';
                             <div class="flex flex-wrap">
                                 <div class="flex justify-center w-1/5 p-2" v-for="appreciation_type in appreciation_types" :key="appreciation_type.id">
                                     <button @click="submitForm(auth.user.id, user.id, appreciation_type.id)" :disabled="isSubmitted || hasSentAppreciation" class="bg-blue-500 rounded-full h-32 w-32">
-                                        <div style="background-color: blue; border-radius: 100%;"
+                                        <div style="background-color: blue; color: aliceblue; border-radius: 100%;"
                                             class="box-border h-32 w-32 p-4 border-4" :title="appreciation_type.name">
+                                            {{ appreciation_type.appreciations_user_count }}
                                         </div>
                                     </button>
                                 </div>
@@ -72,12 +73,19 @@ export default {
             this.formData.appreciation_type_id = appreciation_type_id;
 
             try {
-                const response = await axios.post('/appreciation', this.formData);
-                console.log(response.data);
-                this.isSubmitted = true;
-            } catch (error) {
-                console.error(error);
-            }
+        const response = await axios.post('/appreciation', this.formData);
+        console.log(response.data);
+
+        const sentAppreciationType = this.appreciation_types.find(type => type.id === appreciation_type_id);
+
+        if (sentAppreciationType) {
+            sentAppreciationType.appreciations_user_count++;
+        }
+
+        this.isSubmitted = true;
+    } catch (error) {
+        console.error(error);
+    }
         }
     }
 }

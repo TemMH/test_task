@@ -18,6 +18,11 @@ class CommentRepository
         return $this->model->create($data);
     }
 
+    public function findById(int $id)
+    {
+        return $this->model->findOrFail($id);
+    }
+
     public function exists(int $senderId, int $appreciationId): bool
     {
         return $this->model

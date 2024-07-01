@@ -15,47 +15,33 @@ class AssessmentService
         $this->assessmentRepository = $assessmentRepository;
     }
 
-    public function commentlike(Request $request)
+    public function commentAssessment(Request $request)
     {
-        $senderId = $request->sender_id;
-        $commentId = $request->comment_id;
+        $assessment = Assessment::where('comment_id', $request->comment_id)
+            ->where('sender_id', $request->sender_id)
+            ->first();
 
+        if ($assessment) {
 
-        // $existingAssessment = $this->assessmentRepository->exists($senderId, $commentId);
-        // if ($existingAssessment) {
-        //     return ['success' => false, 'message' => 'Вы уже отправили благодарность этому пользователю.'];
-        // }
+            if ($assessment->status == $request->status) {
+                $assessment->delete();
+                return ['success' => true, 'action' => 'removed'];
+            } else {
 
-        $assessmentData = [
-            'sender_id' => $senderId,
-            'comment_id' => $commentId,
-            'status' => $request->status,
-        ];
+                $assessment->update(['status' => $request->status]);
+                return ['success' => true, 'action' => 'updated', 'assessment' => $assessment];
+            }
+        } else {
 
-        $this->assessmentRepository->save($assessmentData);
+            $assessmentData = [
+                'comment_id' => $request->comment_id,
+                'sender_id' => $request->sender_id,
+                'status' => $request->status,
+            ];
 
-        return ['success' => true];
-    }
+            $assessment = Assessment::create($assessmentData);
 
-    public function commentdislike(Request $request)
-    {
-        $senderId = $request->sender_id;
-        $commentId = $request->comment_id;
-
-
-        // $existingAssessment = $this->assessmentRepository->exists($senderId, $commentId);
-        // if ($existingAssessment) {
-        //     return ['success' => false, 'message' => 'Вы уже отправили благодарность этому пользователю.'];
-        // }
-
-        $assessmentData = [
-            'sender_id' => $senderId,
-            'comment_id' => $commentId,
-            'status' => $request->status,
-        ];
-
-        $this->assessmentRepository->save($assessmentData);
-
-        return ['success' => true];
+            return ['success' => true, 'action' => 'added', 'assessment' => $assessment];
+        }
     }
 }

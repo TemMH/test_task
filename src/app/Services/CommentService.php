@@ -18,18 +18,14 @@ class CommentService
 
     public function store(Request $request)
     {
-        $senderId = $request->sender_id;
-        $appreciationId = $request->appreciation_id;
-
         $commentData = [
-            'appreciation_id' => $appreciationId,
-            'sender_id' => $senderId,
-
+            'appreciation_id' => $request->appreciation_id,
+            'sender_id' => $request->sender_id,
             'comment_text' => $request->comment_text,
         ];
 
-        $this->commentRepository->save($commentData);
+        $comment = $this->commentRepository->save($commentData);
 
-        return ['success' => true];
+        return ['success' => true, 'comment' => $comment];
     }
 }

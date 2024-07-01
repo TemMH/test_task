@@ -50,8 +50,8 @@ Route::post('/appreciation', [AppreciationController::class, 'store'])->name('ap
 
 Route::post('/comment', [CommentController::class, 'store'])->name('comment.store');
 
-Route::post('/like', [AssessmentController::class, 'commentlike'])->name('comment.like');
-Route::post('/dislike', [AssessmentController::class, 'commentdislike'])->name('comment.dislike');
+Route::post('/comment/assessment', [AssessmentController::class, 'commentassessment'])->name('comment.assessment');
+
 
 
 

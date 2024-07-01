@@ -45,11 +45,16 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $appreciation_types = Appreciation_type::all();
+        $appreciation_types = Appreciation_type::query()
+        ->withCount(['appreciations_user' => function ($query) use ($user) {
+            $query->where('recipient_id', $user->id);
+        }])
+        ->get();
 
         $hasSentAppreciation = Appreciation::where('sender_id', auth()->id())
         ->where('recipient_id', $user->id)
         ->exists();
+
         return inertia('User/Show', compact('user','appreciation_types','hasSentAppreciation'));
     }
 

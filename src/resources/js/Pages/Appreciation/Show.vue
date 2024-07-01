@@ -47,7 +47,7 @@ import DangerButton from '@/Components/DangerButton.vue';
 
                                 <TextInput id="comment_text" type="text" class="mt-1 block w-full"
                                     v-model="formData.comment_text" autofocus autocomplete="comment_text" />
-                                <!-- <InputError class="mt-2" :message="formData.errors.comment_text" /> -->
+
 
 
 
@@ -72,11 +72,7 @@ import DangerButton from '@/Components/DangerButton.vue';
 
             </div>
 
-            <div>
-                Комментарии
-            </div>
-
-
+            <div>Комментарии</div>
             <div v-if="comments && comments.length">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-4" v-for="comment in comments" :key="comment.id">
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -86,31 +82,16 @@ import DangerButton from '@/Components/DangerButton.vue';
                                 <div>{{ comment.comment_text }}</div>
                                 <div>{{ comment.date }}</div>
                             </div>
-
                             <div style="display: flex; float: right;">
-
-
-                                <PrimaryButton @click="like(comment.id, auth.user.id, true)" class="ms-4">
-                                    Like
-                                </PrimaryButton>
-
-                                <DangerButton @click="dislike(comment.id, auth.user.id, false)" class="ms-4">
-                                    Dislike
-                                </DangerButton>
-
-
+                                <PrimaryButton @click="assessmentComment(comment.id, auth.user.id, true)" class="ms-4">Like</PrimaryButton>
+                                <DangerButton @click="assessmentComment(comment.id, auth.user.id, false)" class="ms-4">Dislike</DangerButton>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
             </div>
-
             <div v-else class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    Комментариев нет
-                </div>
+                <div class="p-6 text-gray-900">Комментариев нет</div>
             </div>
 
 
@@ -145,46 +126,46 @@ export default {
 
     methods: {
         async submitForm(appreciation_id, sender_id, comment_text) {
-            this.formData.appreciation_id = appreciation_id;
-            this.formData.sender_id = sender_id;
-            this.formData.comment_text = comment_text;
+        this.formData.appreciation_id = appreciation_id;
+        this.formData.sender_id = sender_id;
+        this.formData.comment_text = comment_text;
 
-            try {
-                const response = await axios.post('/comment', this.formData);
-                console.log(response.data);
-
-            } catch (error) {
-                console.error(error);
+        try {
+            const response = await axios.post('/comment', this.formData);
+            console.log(response.data);
+            
+            if (response.data.success) {
+                this.comments.push(response.data.comment);
+            } else {
+                console.error(response.data.message);
             }
-        },
 
-        async like(comment_id, sender_id, status) {
-            this.assessmentData.comment_id = comment_id;
-            this.assessmentData.sender_id = sender_id;
-            this.assessmentData.status = status;
-
-            try {
-                const response = await axios.post('/like', this.assessmentData);
-                console.log(response.data);
-
-            } catch (error) {
-                console.error(error);
-            }
-        },
-
-        async dislike(comment_id, sender_id, status) {
-            this.assessmentData.comment_id = comment_id;
-            this.assessmentData.sender_id = sender_id;
-            this.assessmentData.status = status;
-
-            try {
-                const response = await axios.post('/dislike', this.assessmentData);
-                console.log(response.data);
-
-            } catch (error) {
-                console.error(error);
-            }
+        } catch (error) {
+            console.error(error);
         }
+    },
+
+    async assessmentComment(comment_id, sender_id, status) {
+        try {
+            const response = await axios.post('/comment/assessment', {
+                comment_id: comment_id,
+                sender_id: sender_id,
+                status: status ? 1 : 0
+            });
+            
+            console.log(response.data);
+            
+            const updatedComment = response.data.comment;
+            const index = this.comments.findIndex(c => c.id === updatedComment.id);
+            if (index !== -1) {
+                this.$set(this.comments, index, updatedComment);
+            }
+            
+        } catch (error) {
+                   
+        }
+    },
+
     }
 
 }
