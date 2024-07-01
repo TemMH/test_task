@@ -18,7 +18,7 @@ class AppreciationController extends Controller
      * Display a listing of the resource.
      */
     public function indexUser(User $user)
-    {//Add count comments+likes
+    {
         $appreciation_types = Appreciation_type::all();
         
         $appreciations_user = Appreciation::where('recipient_id', $user->id)->get();
