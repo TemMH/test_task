@@ -20,7 +20,12 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+
+    Route::get('/verify-sms', [AuthenticatedSessionController::class, 'showSmsForm'])->name('auth.sms.verify');
+    Route::post('/verify-sms', [AuthenticatedSessionController::class, 'verifySms'])->name('auth.sms.verify');
+
+Route::post('login/sms', [AuthenticatedSessionController::class, 'verifySms']);
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
                 ->name('password.request');

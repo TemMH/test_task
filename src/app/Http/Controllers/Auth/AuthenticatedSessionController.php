@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Services\SmsService;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
+
 
 class AuthenticatedSessionController extends Controller
 {
@@ -25,17 +29,63 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
+
+    public function showSmsForm(){
+    
+         return Inertia::render('Auth/SmsVerify');
+    }
+
+
+
+
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
+    
+        return redirect()->route('auth.sms.verify')->withInput();
+    }
 
-        $request->session()->regenerate();
 
+
+    public function verifySms(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'sms_code' => ['required', 'string', 'digits:4'],
+        ]);
+    
+        $expectedSmsCode = SmsService::getSmsCode();
+        $inputSmsCode = $request->input('sms_code');
+    
+        Log::info('Введённый смс-код: ' . $inputSmsCode);
+    
+        if ($inputSmsCode !== $expectedSmsCode) {
+            SmsService::generateAndStoreSmsCode(session('auth_temp.phone_number'));
+    
+            throw ValidationException::withMessages([
+                'sms_code' => 'Неверный смс-код.',
+            ])->redirectTo(route('auth.sms.verify'));
+        }
+    
+        $credentials = session('auth_temp');
+    
+        if ($credentials) {
+            Auth::attempt($credentials, $request->boolean('remember'));
+            $request->session()->forget('auth_temp');
+            $request->session()->regenerate();
+        }
+    
         return redirect()->intended(RouteServiceProvider::HOME);
     }
+    
+    
+
+
+
+
+
+
+
+
 
     /**
      * Destroy an authenticated session.
